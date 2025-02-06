@@ -15,15 +15,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.botify.ui.theme.BotifyTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
 
@@ -38,7 +37,7 @@ fun AppBar() {
 
     val context = LocalContext.current
     val activity = context as Activity
-    val toAppBarColor = MaterialTheme.colorScheme.tertiary
+    val toAppBarColor = MaterialTheme.colorScheme.surfaceVariant
     val view = LocalView.current
     SideEffect{
         val window = activity.window
@@ -50,16 +49,17 @@ fun AppBar() {
         window.decorView.setBackgroundColor(toAppBarColor.toArgb())
     }
 
-    TopAppBar(title = { Text("Botify", fontSize = 24.sp, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.SemiBold) },
+    TopAppBar(title = { Text("Botify", style = MaterialTheme.typography.titleLarge,
+        fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace)},
         navigationIcon = {
             IconButton(onClick = { Toast.makeText(a, "Feature not found. Even AI has its lazy days!", Toast.LENGTH_LONG).show()}) {
                 Icon(painter = painterResource(R.drawable.nav_icon),
-                    contentDescription = null, modifier = Modifier.size(200.dp))
+                    contentDescription = null, modifier = Modifier.size(175.dp))
             }
         }, colors = TopAppBarDefaults.topAppBarColors(
             containerColor = toAppBarColor,
-            titleContentColor = MaterialTheme.colorScheme.onTertiary,
-            navigationIconContentColor = MaterialTheme.colorScheme.onTertiary
+            titleContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            navigationIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant
         ))
 }
 
