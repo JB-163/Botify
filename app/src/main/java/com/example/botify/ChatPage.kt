@@ -3,7 +3,11 @@ package com.example.botify
 import android.app.Activity
 import android.os.Build
 import android.widget.Toast
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -19,7 +23,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.botify.ui.theme.BotifyTheme
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -29,7 +39,12 @@ import androidx.core.view.WindowInsetsControllerCompat
 @Composable
 fun ChatPage(modifier: Modifier) {
     AppBar()
+    MessageBox(onMessageSend = {
+
+    })
 }
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppBar() {
@@ -63,10 +78,31 @@ fun AppBar() {
         ))
 }
 
+@Composable
+fun MessageBox(onMessageSend: (String) -> Unit) {
+    var message by remember {
+        mutableStateOf("")
+    }
+
+    Row(modifier = Modifier.padding(6.dp),
+        verticalAlignment = Alignment.CenterVertically) {
+        OutlinedTextField(value = message, onValueChange = {
+            message = it
+        }, modifier = Modifier.weight(1f), label = {Text("Ask Botify")})
+
+        IconButton(onClick = {
+            onMessageSend(message)
+            message = ""
+        }) {
+            Icon(imageVector = Icons.AutoMirrored.Filled.Send, contentDescription = null)
+        }
+    }
+}
+
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun AppBarPreview() {
     BotifyTheme {
-        AppBar()
+
     }
 }
