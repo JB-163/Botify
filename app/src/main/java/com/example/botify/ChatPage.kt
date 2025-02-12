@@ -10,8 +10,12 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material.icons.filled.Build
+import androidx.compose.material.icons.filled.Face
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -28,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import com.example.botify.ui.theme.BotifyTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -83,13 +88,14 @@ fun AppBar() {
             IconButton(onClick = {
                 Toast.makeText(
                     a,
-                    "Feature not found. Even AI has its lazy days!",
+                    "I was placed here for no reason, just like your tap!",
                     Toast.LENGTH_LONG
                 ).show()
-            }) {
+            },
+                modifier = Modifier.size(40.dp)) {
                 Icon(
-                    painter = painterResource(R.drawable.nav_icon),
-                    contentDescription = null, modifier = Modifier.size(175.dp)
+                    imageVector = Icons.Default.Face,
+                    contentDescription = null,
                 )
             }
         }, colors = TopAppBarDefaults.topAppBarColors(
@@ -116,6 +122,7 @@ fun MessageBox(onMessageSend: (String) -> Unit) {
                 message = it
             },
             modifier = Modifier.weight(1f),
+            shape = RoundedCornerShape(30.dp),
             placeholder = {
                 Text(
                     "Ask Botify",
