@@ -10,8 +10,10 @@ val Purple40 = Color(0xFF6650a4)
 val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
-val dark_shade = Color(0xFFEFB8C8)
-val on_dark_shade = Color(0xFF492532)
+val dark_shade = Color(0xFF5F4B8B)
+val on_dark_shade = Color(0xFFE8DAFF)
+val on_dark_text = Color(0xFFFFFFFF)
 
 val light_shade = Color(0xFF7d5260)
 val on_light_shade = Color(0xFFFFFFFF)
+val on_light_text = Color(0xFF000000)

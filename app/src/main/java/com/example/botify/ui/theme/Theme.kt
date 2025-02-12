@@ -1,6 +1,5 @@
 package com.example.botify.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -17,7 +16,9 @@ private val DarkColorScheme = darkColorScheme(
     tertiary = Pink80,
     // Custom color for Dark theme
     surfaceVariant = dark_shade,
-    onSurfaceVariant = on_dark_shade
+    onSurfaceVariant = on_dark_shade,
+    // Custom color for In-app texts
+    outlineVariant = on_dark_text
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -26,7 +27,9 @@ private val LightColorScheme = lightColorScheme(
     tertiary = Pink40,
     // Custom color for Light theme
     surfaceVariant = light_shade,
-    onSurfaceVariant = on_light_shade
+    onSurfaceVariant = on_light_shade,
+    // Custom color for In-app texts
+    outlineVariant = on_light_text
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),

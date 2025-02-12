@@ -3,9 +3,13 @@ package com.example.botify
 import android.app.Activity
 import android.os.Build
 import android.widget.Toast
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -38,10 +42,14 @@ import androidx.core.view.WindowInsetsControllerCompat
 
 @Composable
 fun ChatPage(modifier: Modifier) {
-    AppBar()
-    MessageBox(onMessageSend = {
-
-    })
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .statusBarsPadding()
+        .navigationBarsPadding()) {
+        AppBar()
+        MessageBox(onMessageSend = {
+        })
+    }
 }
 
 
@@ -54,28 +62,42 @@ fun AppBar() {
     val activity = context as Activity
     val toAppBarColor = MaterialTheme.colorScheme.surfaceVariant
     val view = LocalView.current
-    SideEffect{
+    SideEffect {
         val window = activity.window
-        val insetsController = WindowInsetsControllerCompat(window,view)
-        WindowCompat.getInsetsController(window,view).isAppearanceLightStatusBars = false
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        val insetsController = WindowInsetsControllerCompat(window, view)
+        WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = false
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             insetsController.isAppearanceLightStatusBars = false
         }
         window.decorView.setBackgroundColor(toAppBarColor.toArgb())
     }
 
-    TopAppBar(title = { Text("Botify", style = MaterialTheme.typography.titleLarge,
-        fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace)},
+    TopAppBar(
+        title = {
+            Text(
+                "Botify", style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace
+            )
+        },
         navigationIcon = {
-            IconButton(onClick = { Toast.makeText(a, "Feature not found. Even AI has its lazy days!", Toast.LENGTH_LONG).show()}) {
-                Icon(painter = painterResource(R.drawable.nav_icon),
-                    contentDescription = null, modifier = Modifier.size(175.dp))
+            IconButton(onClick = {
+                Toast.makeText(
+                    a,
+                    "Feature not found. Even AI has its lazy days!",
+                    Toast.LENGTH_LONG
+                ).show()
+            }) {
+                Icon(
+                    painter = painterResource(R.drawable.nav_icon),
+                    contentDescription = null, modifier = Modifier.size(175.dp)
+                )
             }
         }, colors = TopAppBarDefaults.topAppBarColors(
             containerColor = toAppBarColor,
             titleContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
             navigationIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant
-        ))
+        )
+    )
 }
 
 @Composable
@@ -84,11 +106,25 @@ fun MessageBox(onMessageSend: (String) -> Unit) {
         mutableStateOf("")
     }
 
-    Row(modifier = Modifier.padding(6.dp),
-        verticalAlignment = Alignment.CenterVertically) {
-        OutlinedTextField(value = message, onValueChange = {
-            message = it
-        }, modifier = Modifier.weight(1f), label = {Text("Ask Botify")})
+    Row(
+        modifier = Modifier.padding(6.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        OutlinedTextField(
+            value = message,
+            onValueChange = {
+                message = it
+            },
+            modifier = Modifier.weight(1f),
+            placeholder = {
+                Text(
+                    "Ask Botify",
+                    color = MaterialTheme.colorScheme.outlineVariant,
+                    style = MaterialTheme.typography.labelLarge,
+                    fontFamily = FontFamily.Monospace,
+                    fontWeight = FontWeight.Light
+                )
+            })
 
         IconButton(onClick = {
             onMessageSend(message)
