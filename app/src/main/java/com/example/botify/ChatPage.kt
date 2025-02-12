@@ -3,6 +3,7 @@ package com.example.botify
 import android.app.Activity
 import android.os.Build
 import android.widget.Toast
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,6 +12,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.Build
@@ -29,13 +32,20 @@ import androidx.compose.ui.unit.dp
 import com.example.botify.ui.theme.BotifyTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.focus.FocusManager
+import androidx.compose.ui.focus.focusTarget
+import androidx.compose.ui.focus.onFocusEvent
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.core.view.WindowCompat
@@ -43,13 +53,18 @@ import androidx.core.view.WindowInsetsControllerCompat
 
 @Composable
 fun ChatPage(modifier: Modifier) {
+    val focusManager = LocalFocusManager.current
     Column(modifier = Modifier
         .fillMaxSize()
         .statusBarsPadding()
-        .navigationBarsPadding()) {
+        .navigationBarsPadding()
+        .clickable {
+            focusManager.clearFocus()
+        }) {
         AppBar()
         MessageBox(onMessageSend = {
-        })
+        },
+            focusManager = focusManager)
     }
 }
 
@@ -103,7 +118,11 @@ fun AppBar() {
 }
 
 @Composable
-fun MessageBox(onMessageSend: (String) -> Unit) {
+fun MessageBox(onMessageSend: (String) -> Unit, focusManager : FocusManager) {
+
+    var isFocused by remember {
+        mutableStateOf(false)
+    }
     var message by remember {
         mutableStateOf("")
     }
@@ -117,8 +136,14 @@ fun MessageBox(onMessageSend: (String) -> Unit) {
             onValueChange = {
                 message = it
             },
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.weight(1f).onFocusEvent {
+                isFocused = it.isFocused
+            }.focusTarget(),
             shape = RoundedCornerShape(30.dp),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = MaterialTheme.colorScheme.outlineVariant
+            ),
+            keyboardOptions = KeyboardOptions.Default,
             placeholder = {
                 Text(
                     "Ask Botify",
@@ -132,6 +157,7 @@ fun MessageBox(onMessageSend: (String) -> Unit) {
         IconButton(onClick = {
             onMessageSend(message)
             message = ""
+            focusManager.clearFocus()
         }) {
             Icon(imageVector = Icons.AutoMirrored.Filled.Send, contentDescription = null)
         }
