@@ -12,6 +12,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
+import androidx.lifecycle.ViewModelProvider
 import com.example.botify.ui.theme.BotifyTheme
 
 class MainActivity : ComponentActivity() {
@@ -19,14 +20,24 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         installSplashScreen()
 
+        // MainActivity code for handling status bar color and edge to edge.
         enableEdgeToEdge()
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
+        // Instance for viewModel
+        val chatModel = ViewModelProvider(this) [ChatViewModel::class.java]
+
         setContent {
             BotifyTheme {
-                Scaffold(modifier = Modifier.fillMaxSize().statusBarsPadding().navigationBarsPadding()) {
-                    innerPadding -> ChatPage(modifier = Modifier.padding(innerPadding))
+                Scaffold(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .statusBarsPadding()
+                        .navigationBarsPadding()
+                ) { innerPadding ->
+                    ChatPage(modifier = Modifier.padding(innerPadding), viewModel = chatModel)
                 }
+
             }
         }
     }

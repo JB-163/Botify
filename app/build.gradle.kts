@@ -49,8 +49,12 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    // Dependency for Splash Screen API
+    // Dependency for Splash Screen API.
     implementation(libs.androidx.core.splashscreen)
+    // ViewModel dependency.
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    // ViewModel utilities for compose dependency.
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

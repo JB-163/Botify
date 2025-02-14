@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
@@ -27,13 +26,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.botify.ui.theme.BotifyTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -52,19 +48,28 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
 
 @Composable
-fun ChatPage(modifier: Modifier) {
+fun ChatPage(modifier: Modifier, viewModel: ChatViewModel) {
+
+    // Variable for handling Keyboard actins.
     val focusManager = LocalFocusManager.current
+
     Column(modifier = Modifier
         .fillMaxSize()
         .statusBarsPadding()
         .navigationBarsPadding()
+
+        // Code for handling keyboard actions.
         .clickable {
             focusManager.clearFocus()
-        }) {
+        }
+    ) {
         AppBar()
-        MessageBox(onMessageSend = {
-        },
-            focusManager = focusManager)
+        MessageBox(
+            onMessageSend = {
+                viewModel.sendMessage(it)
+            },
+            focusManager = focusManager
+        )
     }
 }
 
@@ -72,8 +77,10 @@ fun ChatPage(modifier: Modifier) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppBar() {
+    // variable for handling toast message.
     val a = LocalContext.current.applicationContext
 
+    // Code to set status bar color as same of app bar.
     val context = LocalContext.current
     val activity = context as Activity
     val toAppBarColor = MaterialTheme.colorScheme.surfaceVariant
@@ -88,6 +95,7 @@ fun AppBar() {
         window.decorView.setBackgroundColor(toAppBarColor.toArgb())
     }
 
+    // AppBar code :
     TopAppBar(
         title = {
             Text(
@@ -96,14 +104,16 @@ fun AppBar() {
             )
         },
         navigationIcon = {
-            IconButton(onClick = {
-                Toast.makeText(
-                    a,
-                    "I was placed here for no reason, just like your tap!",
-                    Toast.LENGTH_LONG
-                ).show()
-            },
-                modifier = Modifier.size(40.dp)) {
+            IconButton(
+                onClick = {
+                    Toast.makeText(
+                        a,
+                        "I was placed here for no reason, just like your tap :)",
+                        Toast.LENGTH_LONG
+                    ).show()
+                },
+                modifier = Modifier.size(40.dp)
+            ) {
                 Icon(
                     imageVector = Icons.Default.Build,
                     contentDescription = null,
@@ -118,8 +128,11 @@ fun AppBar() {
 }
 
 @Composable
-fun MessageBox(onMessageSend: (String) -> Unit, focusManager : FocusManager) {
+fun MessageBox(onMessageSend: (String) -> Unit, focusManager: FocusManager) {
 
+    val a = LocalContext.current.applicationContext
+
+    // Variable for handling text field focus.
     var isFocused by remember {
         mutableStateOf(false)
     }
@@ -136,12 +149,19 @@ fun MessageBox(onMessageSend: (String) -> Unit, focusManager : FocusManager) {
             onValueChange = {
                 message = it
             },
-            modifier = Modifier.weight(1f).onFocusEvent {
-                isFocused = it.isFocused
-            }.focusTarget(),
+            modifier = Modifier
+                .weight(1f)
+
+                // Code for handling text field focus.
+                .onFocusEvent {
+                    isFocused = it.isFocused
+                }
+                .focusTarget(),
+
             shape = RoundedCornerShape(30.dp),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = MaterialTheme.colorScheme.outlineVariant
+                focusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
+                errorBorderColor = Color.Red
             ),
             keyboardOptions = KeyboardOptions.Default,
             placeholder = {
@@ -155,19 +175,18 @@ fun MessageBox(onMessageSend: (String) -> Unit, focusManager : FocusManager) {
             })
 
         IconButton(onClick = {
-            onMessageSend(message)
-            message = ""
-            focusManager.clearFocus()
+            if (message.isNotEmpty()) {
+                onMessageSend(message)
+                message = ""
+
+                // Code for handling keyboard actions.
+                focusManager.clearFocus()
+
+            } else {
+                Toast.makeText(a, "Message cannot be empty!", Toast.LENGTH_SHORT).show()
+            }
         }) {
             Icon(imageVector = Icons.AutoMirrored.Filled.Send, contentDescription = null)
         }
-    }
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun AppBarPreview() {
-    BotifyTheme {
-
     }
 }
