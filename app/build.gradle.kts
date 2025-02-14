@@ -55,6 +55,8 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     // ViewModel utilities for compose dependency.
     implementation(libs.androidx.lifecycle.viewmodel.compose)
+    // Gemini sdk dependency
+    implementation(libs.generativeai)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
