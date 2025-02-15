@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -40,7 +41,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.focus.focusTarget
 import androidx.compose.ui.focus.onFocusEvent
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontFamily
@@ -49,28 +49,36 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
 
 @Composable
-fun ChatPage(modifier: Modifier, viewModel: ChatViewModel) {
+fun ChatPage(viewModel: ChatViewModel) {
 
     // Variable for handling Keyboard actins.
     val focusManager = LocalFocusManager.current
 
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .statusBarsPadding()
-        .navigationBarsPadding()
-
-        // Code for handling keyboard actions.
-        .clickable {
-            focusManager.clearFocus()
+    Scaffold(
+        modifier = Modifier
+            .fillMaxSize()
+            .statusBarsPadding()
+            .navigationBarsPadding(),
+        topBar = {
+            AppBar() // App bar is now inside Scaffold
         }
-    ) {
-        AppBar()
-        MessageBox(
-            onMessageSend = {
-                viewModel.sendMessage(it)
-            },
-            focusManager = focusManager
-        )
+    ) { innerPadding ->
+        Column(modifier = Modifier
+            .fillMaxSize()
+            .padding(innerPadding) // Ensures content doesn't overlap with app bar
+
+            // Code for handling keyboard actions.
+            .clickable {
+                focusManager.clearFocus()
+            }
+        ) {
+            MessageBox(
+                onMessageSend = {
+                    viewModel.sendMessage(it)
+                },
+                focusManager = focusManager
+            )
+        }
     }
 }
 
@@ -84,8 +92,8 @@ fun AppBar() {
     // Code to set status bar color as same of app bar.
     val context = LocalContext.current
     val activity = context as Activity
-    val toAppBarColor = MaterialTheme.colorScheme.surfaceVariant
     val view = LocalView.current
+    val toAppBarColor = MaterialTheme.colorScheme.surfaceVariant
     SideEffect {
         val window = activity.window
         val insetsController = WindowInsetsControllerCompat(window, view)
@@ -162,10 +170,9 @@ fun MessageBox(onMessageSend: (String) -> Unit, focusManager: FocusManager) {
 
             shape = RoundedCornerShape(30.dp),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
-                errorBorderColor = Color.Red
+                focusedBorderColor = MaterialTheme.colorScheme.outlineVariant
             ),
-            keyboardOptions = KeyboardOptions.Default,
+            keyboardOptions = KeyboardOptions(autoCorrectEnabled = true),
             placeholder = {
                 Text(
                     "Ask Botify",
