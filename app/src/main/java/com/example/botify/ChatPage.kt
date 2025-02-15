@@ -3,10 +3,13 @@ package com.example.botify
 import android.app.Activity
 import android.os.Build
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -40,6 +43,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.focus.focusTarget
 import androidx.compose.ui.focus.onFocusEvent
@@ -212,7 +216,37 @@ fun MessageList(modifier : Modifier = Modifier,listOfMessages : List<MessageMode
     ) {
         // reverse order of messages.
         items(listOfMessages.reversed()) {
-            Text(it.message)
+            MessageRow(messageModel = it)
         }
     }
+}
+
+@Composable
+fun MessageRow(messageModel : MessageModel) {
+    val isModel = messageModel.role=="model"
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Box(
+                modifier = Modifier.align(
+                    if(isModel) Alignment.BottomStart else Alignment.BottomEnd
+                )
+                    .padding(
+                        start = if(isModel) 8.dp else 72.dp,
+                        end = if(isModel) 72.dp else 8.dp,
+                        top = 8.dp,
+                        bottom = 8.dp
+                    ).clip(RoundedCornerShape(48f))
+                    .background(MaterialTheme.colorScheme.surfaceVariant).padding(12.dp)
+            ) {
+                Text(messageModel.message, fontWeight = FontWeight.W500, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+
+        }
+    }
+
 }
