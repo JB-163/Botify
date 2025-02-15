@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -72,6 +74,7 @@ fun ChatPage(viewModel: ChatViewModel) {
                 focusManager.clearFocus()
             }
         ) {
+            MessageList(listOfMessages = viewModel.messageList, modifier = Modifier.weight(1f))
             MessageBox(
                 onMessageSend = {
                     viewModel.sendMessage(it)
@@ -196,6 +199,20 @@ fun MessageBox(onMessageSend: (String) -> Unit, focusManager: FocusManager) {
             }
         }) {
             Icon(imageVector = Icons.AutoMirrored.Filled.Send, contentDescription = null)
+        }
+    }
+}
+
+@Composable
+fun MessageList(modifier : Modifier = Modifier,listOfMessages : List<MessageModel>) {
+    LazyColumn(
+        modifier = modifier,
+        // reverse scroll order
+        reverseLayout = true
+    ) {
+        // reverse order of messages.
+        items(listOfMessages.reversed()) {
+            Text(it.message)
         }
     }
 }
