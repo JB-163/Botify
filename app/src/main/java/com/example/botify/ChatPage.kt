@@ -77,7 +77,10 @@ fun ChatPage(viewModel: ChatViewModel) {
                 .imePadding()
 
                 // Code for handling keyboard actions.
-                .clickable {
+                .clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() }
+                ){
                     focusManager.clearFocus()
                 }
             ) {
