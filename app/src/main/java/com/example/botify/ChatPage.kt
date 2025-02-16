@@ -3,17 +3,19 @@ package com.example.botify
 import android.app.Activity
 import android.os.Build
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -55,6 +57,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
 
+@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
 fun ChatPage(viewModel: ChatViewModel) {
 
@@ -62,32 +65,39 @@ fun ChatPage(viewModel: ChatViewModel) {
     val focusManager = LocalFocusManager.current
 
     Scaffold(
-        modifier = Modifier
-            .fillMaxSize()
-            .statusBarsPadding()
-            .navigationBarsPadding(),
         topBar = {
             AppBar() // App bar is now inside Scaffold
-        }
-    ) { innerPadding ->
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .padding(innerPadding) // Ensures content doesn't overlap with app bar
+        },
+        content = { paddingValues ->
+            Column(modifier = Modifier
+                .fillMaxSize()
+                // Ensures content doesn't overlap with app bar
+                .padding(paddingValues)
+                .fillMaxSize()
+                .imePadding()
 
-            // Code for handling keyboard actions.
-            .clickable {
-                focusManager.clearFocus()
+                // Code for handling keyboard actions.
+                .clickable {
+                    focusManager.clearFocus()
+                }
+            ) {
+                MessageList(
+                    modifier = Modifier.weight(1f),
+                    listOfMessages = viewModel.messageList
+                )
+                MessageBox(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .navigationBarsPadding(),
+                    onMessageSend = {
+                        viewModel.sendMessage(it)
+                    },
+                    focusManager = focusManager
+                )
             }
-        ) {
-            MessageList(listOfMessages = viewModel.messageList, modifier = Modifier.weight(1f))
-            MessageBox(
-                onMessageSend = {
-                    viewModel.sendMessage(it)
-                },
-                focusManager = focusManager
-            )
         }
-    }
+    )
+
 }
 
 
@@ -145,7 +155,11 @@ fun AppBar() {
 }
 
 @Composable
-fun MessageBox(onMessageSend: (String) -> Unit, focusManager: FocusManager) {
+fun MessageBox(
+    modifier: Modifier = Modifier,
+    onMessageSend: (String) -> Unit,
+    focusManager: FocusManager
+) {
 
     val a = LocalContext.current.applicationContext
 
@@ -158,8 +172,11 @@ fun MessageBox(onMessageSend: (String) -> Unit, focusManager: FocusManager) {
         mutableStateOf(false)
     }
 
+
     Row(
-        modifier = Modifier.padding(6.dp),
+        modifier = Modifier
+            .padding(6.dp)
+            .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
         OutlinedTextField(
@@ -167,8 +184,10 @@ fun MessageBox(onMessageSend: (String) -> Unit, focusManager: FocusManager) {
             onValueChange = {
                 message = it
             },
-            modifier = Modifier.padding(3.dp)
+            modifier = Modifier
                 .weight(1f)
+                .padding(3.dp)
+
 
                 // Code for handling text field focus.
                 .onFocusEvent {
@@ -180,8 +199,10 @@ fun MessageBox(onMessageSend: (String) -> Unit, focusManager: FocusManager) {
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = MaterialTheme.colorScheme.outlineVariant
             ),
-            keyboardOptions = KeyboardOptions(autoCorrectEnabled = true,
-                capitalization = KeyboardCapitalization.Sentences),
+            keyboardOptions = KeyboardOptions(
+                autoCorrectEnabled = true,
+                capitalization = KeyboardCapitalization.Sentences
+            ),
             placeholder = {
                 Text(
                     "Ask Botify",
@@ -210,7 +231,7 @@ fun MessageBox(onMessageSend: (String) -> Unit, focusManager: FocusManager) {
 }
 
 @Composable
-fun MessageList(modifier : Modifier = Modifier,listOfMessages : List<MessageModel>) {
+fun MessageList(modifier: Modifier = Modifier, listOfMessages: List<MessageModel>) {
 
     LazyColumn(
         modifier = modifier,
@@ -226,8 +247,8 @@ fun MessageList(modifier : Modifier = Modifier,listOfMessages : List<MessageMode
 }
 
 @Composable
-fun MessageRow(messageModel : MessageModel) {
-    val isModel = messageModel.role=="model"
+fun MessageRow(messageModel: MessageModel) {
+    val isModel = messageModel.role == "model"
 
     Row(
         verticalAlignment = Alignment.CenterVertically
@@ -236,19 +257,25 @@ fun MessageRow(messageModel : MessageModel) {
             modifier = Modifier.fillMaxWidth()
         ) {
             Box(
-                modifier = Modifier.align(
-                    if(isModel) Alignment.BottomStart else Alignment.BottomEnd
-                )
+                modifier = Modifier
+                    .align(
+                        if (isModel) Alignment.BottomStart else Alignment.BottomEnd
+                    )
                     .padding(
-                        start = if(isModel) 8.dp else 72.dp,
-                        end = if(isModel) 72.dp else 8.dp,
+                        start = if (isModel) 8.dp else 72.dp,
+                        end = if (isModel) 72.dp else 8.dp,
                         top = 8.dp,
                         bottom = 8.dp
-                    ).clip(RoundedCornerShape(32f))
+                    )
+                    .clip(RoundedCornerShape(32f))
                     .background(MaterialTheme.colorScheme.surfaceVariant)
                     .padding(13.dp)
             ) {
-                Text(messageModel.message, fontWeight = FontWeight.W500, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(
+                    messageModel.message,
+                    fontWeight = FontWeight.W500,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
             }
 
         }
