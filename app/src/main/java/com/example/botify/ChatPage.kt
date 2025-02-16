@@ -233,7 +233,8 @@ fun MessageRow(messageModel : MessageModel) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            contentAlignment = Alignment.Center
         ) {
             Box(
                 modifier = Modifier.align(
@@ -245,10 +246,9 @@ fun MessageRow(messageModel : MessageModel) {
                         top = 8.dp,
                         bottom = 8.dp
                     ).clip(RoundedCornerShape(16.dp))
-                    .background(MaterialTheme.colorScheme.surfaceVariant).padding(12.dp),
-                contentAlignment = Alignment.Center
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
             ) {
-                Text(messageModel.message, fontWeight = FontWeight.W500, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(messageModel.message, modifier = Modifier.padding(10.dp), fontWeight = FontWeight.W500, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
 
         }

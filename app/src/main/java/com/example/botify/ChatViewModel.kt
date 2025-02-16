@@ -1,11 +1,9 @@
 package com.example.botify
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.botify.ui.theme.Constants
 import com.google.ai.client.generativeai.GenerativeModel
 import kotlinx.coroutines.launch
 
@@ -31,7 +29,7 @@ class ChatViewModel : ViewModel() {
             messageList.add(MessageModel(message = question, role = "user"))
             val response = chat.sendMessage(question)
             // Adding model response to the messageList
-            messageList.add(MessageModel(message = response.text.toString(), role = "model"))
+            messageList.add(MessageModel(message = response.text.toString(),role = "model"))
         }
     }
 }
