@@ -10,6 +10,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
@@ -68,12 +69,11 @@ fun ChatPage(viewModel: ChatViewModel) {
         topBar = {
             AppBar() // App bar is now inside Scaffold
         },
+        contentWindowInsets = WindowInsets(0.dp),
         content = { paddingValues ->
-            Column(modifier = Modifier
-                .fillMaxSize()
+            Column(modifier = Modifier.fillMaxSize()
                 // Ensures content doesn't overlap with app bar
                 .padding(paddingValues)
-                .fillMaxSize()
                 .imePadding()
 
                 // Code for handling keyboard actions.
@@ -91,6 +91,7 @@ fun ChatPage(viewModel: ChatViewModel) {
                 MessageBox(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .imePadding()
                         .navigationBarsPadding(),
                     onMessageSend = {
                         viewModel.sendMessage(it)
