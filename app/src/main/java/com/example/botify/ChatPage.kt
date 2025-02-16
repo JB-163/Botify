@@ -244,10 +244,11 @@ fun MessageRow(messageModel : MessageModel) {
                         end = if(isModel) 72.dp else 8.dp,
                         top = 8.dp,
                         bottom = 8.dp
-                    ).clip(RoundedCornerShape(16.dp))
+                    ).clip(RoundedCornerShape(32f))
                     .background(MaterialTheme.colorScheme.surfaceVariant)
+                    .padding(13.dp)
             ) {
-                Text(messageModel.message, modifier = Modifier.padding(12.dp).align(Alignment.Center), fontWeight = FontWeight.W500, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(messageModel.message, fontWeight = FontWeight.W500, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
 
         }
