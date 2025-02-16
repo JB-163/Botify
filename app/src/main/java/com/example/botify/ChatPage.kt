@@ -51,6 +51,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
 
@@ -166,7 +167,7 @@ fun MessageBox(onMessageSend: (String) -> Unit, focusManager: FocusManager) {
             onValueChange = {
                 message = it
             },
-            modifier = Modifier
+            modifier = Modifier.padding(3.dp)
                 .weight(1f)
 
                 // Code for handling text field focus.
@@ -179,7 +180,8 @@ fun MessageBox(onMessageSend: (String) -> Unit, focusManager: FocusManager) {
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = MaterialTheme.colorScheme.outlineVariant
             ),
-            keyboardOptions = KeyboardOptions(autoCorrectEnabled = true),
+            keyboardOptions = KeyboardOptions(autoCorrectEnabled = true,
+                capitalization = KeyboardCapitalization.Sentences),
             placeholder = {
                 Text(
                     "Ask Botify",
@@ -209,11 +211,13 @@ fun MessageBox(onMessageSend: (String) -> Unit, focusManager: FocusManager) {
 
 @Composable
 fun MessageList(modifier : Modifier = Modifier,listOfMessages : List<MessageModel>) {
+
     LazyColumn(
         modifier = modifier,
         // reverse scroll order
         reverseLayout = true
     ) {
+
         // reverse order of messages.
         items(listOfMessages.reversed()) {
             MessageRow(messageModel = it)
@@ -240,8 +244,9 @@ fun MessageRow(messageModel : MessageModel) {
                         end = if(isModel) 72.dp else 8.dp,
                         top = 8.dp,
                         bottom = 8.dp
-                    ).clip(RoundedCornerShape(48f))
-                    .background(MaterialTheme.colorScheme.surfaceVariant).padding(12.dp)
+                    ).clip(RoundedCornerShape(16.dp))
+                    .background(MaterialTheme.colorScheme.surfaceVariant).padding(12.dp),
+                contentAlignment = Alignment.Center
             ) {
                 Text(messageModel.message, fontWeight = FontWeight.W500, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
