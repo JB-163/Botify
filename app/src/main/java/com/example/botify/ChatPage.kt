@@ -21,6 +21,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.Build
@@ -280,11 +281,15 @@ fun MessageRow(messageModel: MessageModel) {
                     .background(MaterialTheme.colorScheme.surfaceVariant)
                     .padding(13.dp)
             ) {
-                Text(
-                    messageModel.message,
-                    fontWeight = FontWeight.W500,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+
+                SelectionContainer {
+                    Text(
+                        messageModel.message,
+                        fontWeight = FontWeight.W500,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+
             }
         }
     }
