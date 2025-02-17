@@ -10,11 +10,8 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -38,7 +35,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -60,48 +56,30 @@ import androidx.core.view.WindowInsetsControllerCompat
 
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
-fun ChatPage(viewModel: ChatViewModel) {
+fun ChatPage(modifier: Modifier = Modifier, viewModel: ChatViewModel) {
 
     // Variable for handling Keyboard actins.
     val focusManager = LocalFocusManager.current
-
-    Scaffold(
-        topBar = {
-            AppBar() // App bar is now inside Scaffold
-        },
-        contentWindowInsets = WindowInsets(0.dp),
-        content = { paddingValues ->
-            Column(modifier = Modifier.fillMaxSize()
-                // Ensures content doesn't overlap with app bar
-                .padding(paddingValues)
-                .imePadding()
-
-                // Code for handling keyboard actions.
-                .clickable(
-                    indication = null,
-                    interactionSource = remember { MutableInteractionSource() }
-                ){
-                    focusManager.clearFocus()
-                }
-            ) {
-                MessageList(
-                    modifier = Modifier.weight(1f),
-                    listOfMessages = viewModel.messageList
-                )
-                MessageBox(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .imePadding()
-                        .navigationBarsPadding(),
-                    onMessageSend = {
-                        viewModel.sendMessage(it)
-                    },
-                    focusManager = focusManager
-                )
-            }
+    Column(modifier = modifier.imePadding()
+        // Code for handling keyboard actions.
+        .clickable(
+            indication = null,
+            interactionSource = remember { MutableInteractionSource() }
+        ) {
+            focusManager.clearFocus()
         }
-    )
-
+    ) {
+        MessageList(
+            modifier = Modifier.weight(1f),
+            listOfMessages = viewModel.messageList
+        )
+        MessageBox(
+            onMessageSend = {
+                viewModel.sendMessage(it)
+            },
+            focusManager = focusManager
+        )
+    }
 }
 
 
@@ -160,7 +138,6 @@ fun AppBar() {
 
 @Composable
 fun MessageBox(
-    modifier: Modifier = Modifier,
     onMessageSend: (String) -> Unit,
     focusManager: FocusManager
 ) {
@@ -179,7 +156,7 @@ fun MessageBox(
 
     Row(
         modifier = Modifier
-            .padding(6.dp)
+            .padding(top = 3.dp, bottom = 12.dp, start = 12.dp, end = 12.dp)
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
