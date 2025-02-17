@@ -2,7 +2,9 @@ package com.example.botify
 
 import android.os.Build
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.addCallback
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
@@ -16,6 +18,10 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.botify.ui.theme.BotifyTheme
 
 class MainActivity : ComponentActivity() {
+
+    private var backPressesTime : Long = 0
+    private var backPressedInterval : Long = 2000
+
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +40,15 @@ class MainActivity : ComponentActivity() {
                     topBar = { AppBar() }) { innerPadding ->
                     ChatPage(modifier = Modifier.padding(innerPadding), viewModel = chatModel)
                 }
+            }
+        }
+
+        onBackPressedDispatcher.addCallback(this) {
+            if(System.currentTimeMillis() - backPressesTime < backPressedInterval) {
+                finish()
+            } else {
+                backPressesTime = System.currentTimeMillis()
+                Toast.makeText(this@MainActivity, "Press back again to exit", Toast.LENGTH_SHORT).show()
             }
         }
     }
