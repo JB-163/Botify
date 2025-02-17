@@ -27,26 +27,32 @@ class ChatViewModel : ViewModel() {
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun sendMessage(question: String) {
         viewModelScope.launch {
-            val chat = generativeModel.startChat(
-                // Code for saving chat history to API
-                history = messageList.map {
-                    content(it.role) {
-                        text(it.message)
-                    }
-                }.toList()
-            )
+            try {
+                val chat = generativeModel.startChat(
+                    // Code for saving chat history to API
+                    history = messageList.map {
+                        content(it.role) {
+                            text(it.message)
+                        }
+                    }.toList()
+                )
 
-            // Adding user message to the messageList
-            messageList.add(MessageModel(message = question, role = "user"))
+                // Adding user message to the messageList
+                messageList.add(MessageModel(message = question, role = "user"))
 
-            // Fake message added to show typing
-            messageList.add(MessageModel("Typing...", role = "model"))
-            val response = chat.sendMessage(question)
-            // Removing fake message
-            messageList.removeLast()
+                // Fake message added to show typing
+                messageList.add(MessageModel("Typing...", role = "model"))
+                val response = chat.sendMessage(question)
+                // Removing fake message
+                messageList.removeLast()
 
-            // Adding model response to the messageList
-            messageList.add(MessageModel(message = response.text.toString(), role = "model"))
+                // Adding model response to the messageList
+                messageList.add(MessageModel(message = response.text.toString(), role = "model"))
+            }
+            catch (e : Exception) {
+                messageList.removeLast()
+                messageList.add(MessageModel("Error : ${e.message.toString()}", role = "model"))
+            }
         }
     }
 }
