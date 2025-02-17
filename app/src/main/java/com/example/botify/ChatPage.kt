@@ -11,16 +11,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -40,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -53,12 +52,10 @@ import androidx.compose.ui.focus.focusTarget
 import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardCapitalization
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -222,6 +219,11 @@ fun MessageBox(
 
 @Composable
 fun MessageList(modifier: Modifier = Modifier, listOfMessages: List<MessageModel>) {
+
+    val listState = rememberLazyListState()
+    LaunchedEffect(listOfMessages.size) {
+        listState.animateScrollToItem(listOfMessages.size-1)
+    }
     if (listOfMessages.isEmpty()) {
         Column(
             modifier = modifier.fillMaxSize(),
@@ -230,7 +232,6 @@ fun MessageList(modifier: Modifier = Modifier, listOfMessages: List<MessageModel
         ) {
             Text(
                 "\"No 'Hi?' - Talk to Me\"",
-                modifier = Modifier.padding(top = 250.dp),
                 fontSize = 25.sp,
                 color = MaterialTheme.colorScheme.outlineVariant,
                 fontFamily = FontFamily.Monospace,
@@ -238,19 +239,20 @@ fun MessageList(modifier: Modifier = Modifier, listOfMessages: List<MessageModel
                 fontWeight = FontWeight.SemiBold
             )
         }
-    }
+    } else {
+        LazyColumn(
+            modifier = modifier,
+            state = listState
+        ) {
 
-    LazyColumn(
-        modifier = modifier,
-        // reverse scroll order
-        reverseLayout = true
-    ) {
-
-        // reverse order of messages.
-        items(listOfMessages.reversed()) {
-            MessageRow(messageModel = it)
+            // reverse order of messages.
+            items(listOfMessages) {
+                MessageRow(messageModel = it)
+            }
         }
     }
+
+
 }
 
 @Composable
@@ -284,8 +286,6 @@ fun MessageRow(messageModel: MessageModel) {
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-
         }
     }
-
 }
