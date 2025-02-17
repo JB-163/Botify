@@ -116,7 +116,7 @@ fun AppBar() {
     TopAppBar(
         title = {
             Text(
-                "Botify", style = MaterialTheme.typography.titleLarge,
+                "Chatify", style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace
             )
         },
@@ -193,7 +193,7 @@ fun MessageBox(
             ),
             placeholder = {
                 Text(
-                    "Ask Botify",
+                    "Ask Chatify?",
                     color = MaterialTheme.colorScheme.outlineVariant,
                     style = MaterialTheme.typography.labelLarge,
                     fontFamily = FontFamily.Monospace,
