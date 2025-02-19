@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    // New dark theme for splash screen.
     <style name="Theme.botify.splash" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/splash_background_dark</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/new_splash_logo</item>

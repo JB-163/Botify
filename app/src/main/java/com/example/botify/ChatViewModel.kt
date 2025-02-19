@@ -37,10 +37,10 @@ class ChatViewModel : ViewModel() {
                     }.toList()
                 )
 
-                // Adding user message to the messageList
+                // Saving user message to the messageList
                 messageList.add(MessageModel(message = question, role = "user"))
 
-                // Fake message added to show typing
+                // Fake message added to show typing feature
                 messageList.add(MessageModel("Typing...", role = "model"))
                 val response = chat.sendMessage(question)
                 // Removing fake message

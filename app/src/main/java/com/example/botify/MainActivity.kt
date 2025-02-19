@@ -19,12 +19,14 @@ import com.example.botify.ui.theme.BotifyTheme
 
 class MainActivity : ComponentActivity() {
 
+    // Variables for handling back press.
     private var backPressesTime : Long = 0
     private var backPressedInterval : Long = 2000
 
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // After making changes in manifest file, function must be called here for implementing splash screen.
         installSplashScreen()
 
         // MainActivity code for handling status bar color and edge to edge.
@@ -43,6 +45,7 @@ class MainActivity : ComponentActivity() {
             }
         }
 
+        // Code for handling back press.
         onBackPressedDispatcher.addCallback(this) {
             if(System.currentTimeMillis() - backPressesTime < backPressedInterval) {
                 finish()

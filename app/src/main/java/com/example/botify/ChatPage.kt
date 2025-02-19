@@ -65,15 +65,16 @@ import androidx.core.view.WindowInsetsControllerCompat
 @Composable
 fun ChatPage(modifier: Modifier = Modifier, viewModel: ChatViewModel) {
 
-    // Variable for handling Keyboard actins.
+    // Variable for handling Keyboard actions.
     val focusManager = LocalFocusManager.current
-    Column(modifier = modifier
-        .imePadding()
-        // Code for handling keyboard actions.
+
+    Column(modifier = modifier.imePadding() // Adding adjust resize in manifest file causes keyboard problems. so ime padding should be used.
         .clickable(
+            // code to avoid ripple effect on clicking.
             indication = null,
             interactionSource = remember { MutableInteractionSource() }
         ) {
+            // Code for handling keyboard actions.
             focusManager.clearFocus()
         }
     ) {
@@ -89,7 +90,6 @@ fun ChatPage(modifier: Modifier = Modifier, viewModel: ChatViewModel) {
         )
     }
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -155,7 +155,6 @@ fun MessageBox(
     var message by rememberSaveable {
         mutableStateOf("")
     }
-
     // Variable for handling text field focus.
     var isFocused by remember {
         mutableStateOf(false)
@@ -175,7 +174,6 @@ fun MessageBox(
             modifier = Modifier
                 .weight(1f)
                 .padding(3.dp)
-
 
                 // Code for handling text field focus.
                 .onFocusEvent {
@@ -221,10 +219,12 @@ fun MessageBox(
 @Composable
 fun MessageList(modifier: Modifier = Modifier, listOfMessages: List<MessageModel>) {
 
+    // Code to deal with scrolling.
     val listState = rememberLazyListState()
     LaunchedEffect(listOfMessages.size) {
         listState.animateScrollToItem(listOfMessages.size-1)
     }
+
     if (listOfMessages.isEmpty()) {
         Column(
             modifier = modifier.fillMaxSize(),
@@ -243,17 +243,14 @@ fun MessageList(modifier: Modifier = Modifier, listOfMessages: List<MessageModel
     } else {
         LazyColumn(
             modifier = modifier,
+            // ListState variable used here.
             state = listState
         ) {
-
-            // reverse order of messages.
             items(listOfMessages) {
                 MessageRow(messageModel = it)
             }
         }
     }
-
-
 }
 
 @Composable
@@ -281,7 +278,6 @@ fun MessageRow(messageModel: MessageModel) {
                     .background(MaterialTheme.colorScheme.surfaceVariant)
                     .padding(13.dp)
             ) {
-
                 SelectionContainer {
                     Text(
                         messageModel.message,
@@ -289,7 +285,6 @@ fun MessageRow(messageModel: MessageModel) {
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-
             }
         }
     }
